@@ -17,7 +17,7 @@ interface PureLyricInfo {
   }[]
 }
 
-export interface DynamicWordInfo {
+export interface DynamicFontInfo {
   // 时间
   time: number
   // 时长
@@ -53,7 +53,7 @@ export interface LyricLine {
       // 总时长
       time: number
       // 每个字符
-      words: DynamicWordInfo[]
+      words: DynamicFontInfo[]
     }
   }
   // 配置
@@ -86,7 +86,7 @@ const PURE_MUSIC_LYRIC_LINE: LyricLine[] = [
     },
   },
 ]
-export const EMPTY_DYNAMIC_WORD: DynamicWordInfo = {
+export const EMPTY_DYNAMIC_WORD: DynamicFontInfo = {
   time: 0,
   duration: 0,
   text: '',
@@ -215,7 +215,7 @@ export class LyricParser {
 
       tmp = lineMatches.groups?.line || ''
       const timestamp = this.handleParseLyricTime(lineMatches.groups?.min || '0', lineMatches.groups?.sec || '0')
-      const words: DynamicWordInfo[] = []
+      const words: DynamicFontInfo[] = []
 
       while (tmp.length > 0) {
         const wordMatches = tmp.match(this.REGEXP.DYNAMIC_LINE_WORD)
@@ -225,6 +225,15 @@ export class LyricParser {
         const wordDuration = parseInt(wordMatches.groups?.duration || '0')
         const word = wordMatches.groups?.word.trimStart()
 
+        // 某些单词内容为空，补上一个空格
+        if (!word) {
+          words.push({
+            time: wordTime,
+            duration: wordDuration,
+            text: " ",
+            config: EMPTY_DYNAMIC_WORD['config'],
+          })
+        }
         const splitedWords = word?.split(/\s+/).filter(v => v.trim().length > 0) // 有些歌词一个单词还是一个句子的就离谱
         if (splitedWords) {
           const splitedDuration = wordDuration / splitedWords.length

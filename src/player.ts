@@ -1,4 +1,4 @@
-import { EMPTY_LYRIC_INFO, type LyricInfo, type LyricLine, type DynamicWordInfo } from './parser'
+import { EMPTY_LYRIC_INFO, type LyricInfo, type LyricLine, type DynamicFontInfo } from './parser'
 import { TimeoutTools, handleGetNowTime, noop } from './utils'
 
 export interface LineActionParams {
@@ -29,7 +29,7 @@ export interface PlayerOptions {
    * @param fontNum font number of current play
    * @param info font info
    */
-  onFontPlay?: (fontNum: number, info: DynamicWordInfo) => void
+  onFontPlay?: (fontNum: number, info: DynamicFontInfo) => void
 
   /**
    * listening lyrics seting event
@@ -83,7 +83,7 @@ export class LyricPlayer {
     max: number
   }
   private currentFontInfo: {
-    fonts: DynamicWordInfo[]
+    fonts: DynamicFontInfo[]
     num: number
     max: number
   }
